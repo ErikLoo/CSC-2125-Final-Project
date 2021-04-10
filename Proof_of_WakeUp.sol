@@ -28,8 +28,6 @@ contract PoW{
 
      }
      
-     mapping(address => uint256) public unlockAfter;
-      
      
      //record all the user addresses. used for reward redistribution
      address[] userList;
@@ -72,8 +70,6 @@ contract PoW{
         require(amount>0,"Deposited amount cannot be zero");
         users[msg.sender].balance+=amount; 
         users[msg.sender].unlockAfter = fTimeStamp -  users[msg.sender].timeOffset;  
-        
-        unlockAfter[msg.sender] = fTimeStamp -  users[msg.sender].timeOffset;  
         
         //convert to utc adjusted for different time zones
         uint256 taskTimeToday = todayTaskTimeStamp- users[msg.sender].timeOffset;
