@@ -78,6 +78,79 @@
                 },
                 {
                     "inputs": [],
+                    "name": "createCurrentTaskID",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "returnFunds",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "cTimeStamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "todayTaskTimeStamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "fTimeStamp",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "today",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "setAlarm",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "submission",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "submitAndVerify",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "amount",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "transfer",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
                     "name": "checkInUse",
                     "outputs": [
                         {
@@ -94,19 +167,12 @@
                     "name": "clockEndIn",
                     "outputs": [
                         {
-                            "internalType": "int256",
+                            "internalType": "uint256",
                             "name": "",
-                            "type": "int256"
+                            "type": "uint256"
                         }
                     ],
                     "stateMutability": "view",
-                    "type": "function"
-                },
-                {
-                    "inputs": [],
-                    "name": "createCurrentTaskID",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
                     "type": "function"
                 },
                 {
@@ -175,81 +241,15 @@
                 },
                 {
                     "inputs": [],
-                    "name": "returnFunds",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "uint256",
-                            "name": "cTimeStamp",
-                            "type": "uint256"
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "todayTaskTimeStamp",
-                            "type": "uint256"
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "fTimeStamp",
-                            "type": "uint256"
-                        },
-                        {
-                            "internalType": "bool",
-                            "name": "today",
-                            "type": "bool"
-                        }
-                    ],
-                    "name": "setAlarm",
-                    "outputs": [],
-                    "stateMutability": "payable",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "string",
-                            "name": "submission",
-                            "type": "string"
-                        }
-                    ],
-                    "name": "submitAndVerify",
-                    "outputs": [],
-                    "stateMutability": "nonpayable",
-                    "type": "function"
-                },
-                {
-                    "inputs": [],
                     "name": "taskStartIn",
                     "outputs": [
                         {
-                            "internalType": "int256",
-                            "name": "",
-                            "type": "int256"
-                        }
-                    ],
-                    "stateMutability": "view",
-                    "type": "function"
-                },
-                {
-                    "inputs": [
-                        {
-                            "internalType": "address",
-                            "name": "to",
-                            "type": "address"
-                        },
-                        {
                             "internalType": "uint256",
-                            "name": "amount",
+                            "name": "",
                             "type": "uint256"
                         }
                     ],
-                    "name": "transfer",
-                    "outputs": [],
-                    "stateMutability": "payable",
+                    "stateMutability": "view",
                     "type": "function"
                 },
                 {
@@ -341,7 +341,7 @@
                     "type": "function"
                 }
             ]
-            ,'0xe50b1e89c4bA312E7F08A5F031d2F996103d018D'
+            ,'0x85e239Fbf5e1F7fdaa0cBE7b2E4f2fc1Eb8Fe824'
 
 		)
 
@@ -478,35 +478,6 @@
         
     }
 
-    function claimDepositImmediately(){
-        myContract.methods.checkInUse().call(function(error, result){
-            if(!error)
-                {      
-                    //start withdraw if the amount of larger than zero
-                    //reclaim funds when the smart contract has finsished its use
-                    if(result==false){                     
-                         myContract.methods.returnFunds().send({from: userAccount},function(error, result){
-                        if(!error)
-                            {                                   
-                               alert("Deposit successfully returned");
-                            }
-                        else{
-                               alert("You have no balance to be returned");
-                            // console.log(error);
-                        }    
-                });
-                    }else{
-                        console.log("The contract is in use. Wait for it to finish.");
-                    }
-
-              }
-            else{
-                console.log(error);
-            }
-        });
-        
-    }
-
     //can attempt to solutions three times in total, 2 local and 1 smart contract
     var numTrials=2;
     function localVerification(){
@@ -592,27 +563,6 @@
     }
 
 
-    // function myGetTaskTime(){
-    //     var myTimer = setInterval(() => {
-    //         myContract.methods.users(userAccount).call({from:userAccount},function(error, result){
-    //             if(!error)
-    //                 {   
-    //                     var taskEndTime = result.taskStartAt - currentTimeInUnix(); 
-
-    //                     console.log("Task start in: " + taskEndTime);
-    //                     if (taskEndTime>0){
-    //                         startTaskTimer(taskEndTime);
-    //                         clearInterval(myTimer);
-    //                     }
-    //                     }                        
-    //             else{
-    //                 console.log("Failed to get task time")
-    //                 // console.log(error);
-    //             }
-    //         });
-    // }, 3*1000);
-    // }
-
     function getClockTime(){
         var myTimer = setInterval(() => {
             myContract.methods.clockEndIn().call(function(error, result){
@@ -634,34 +584,7 @@
 
     }
 
-    // function myGetClockTime(){
-
-    //             var myTimer = setInterval(() => {
-    //                 myContract.methods.users(userAccount).call(function(error, result){
-    //                     if(!error)
-    //                     {   
-    //                         // console.log("obtained clock end time: " + result.unlockAfter);
-    //                         var clockEndTime = result.unlockAfter - currentTimeInUnix(); 
-    //                         // var clockEndTime = result.unlockAfter;
-
-    //                         console.log("clock end in: " + clockEndTime);
-        
-    //                         if (clockEndTime>0){
-    //                             startClockTimer(clockEndTime);
-    //                             clearInterval(myTimer);
-    //                         }
-    //                         }                        
-    //                 else{
-    //                     console.log("Failed to get clock time");
-    //                     // console.log(error);
-        
-    //                 }
-    //                 });
-    //             }, 3*1000);
-    //             }
     
-    
-
 
     function checkInUse(){
         myContract.methods.checkInUse().call({from:userAccount},function(error, result){
