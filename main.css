@@ -1,0 +1,51 @@
+body {
+    padding: 2em;
+    font-family: 'Raleway','Source Sans Pro', 'Arial';
+}
+/* .container {
+    width: 50%;
+    margin: 0 auto;
+} */
+input {
+    /* padding:10px; */
+    /* width: 30%; */
+    margin-bottom: 1em;
+}
+
+
+.confirmation>div{
+    display: inline-block;
+    width: 40%;
+}
+
+.confirm_but {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #3368b2;
+    color: white;
+    cursor: pointer;
+}
+
+.confirm_but:disabled{
+    /* color: #888; */
+    background: #888;
+
+}
+
+.PoW{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.inlcudingToday>div{
+    display: inline-block;
+    /* display: -moz-inline-box;
+    *display: inline; */
+    /* For IE7 */
+    /* Trigger hasLayout */
+    width: 39%;
+    text-align: center;
+}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Proof-of-WakeUp</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" href="CSS_folder/clock.css">
+
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+    <script src="JS_Folder/myWeb3.js"></script>
+
+
+</head>
+<body>
+    <h1 style="text-align: center;">Proof-of-WakeUp: An Alarm Clock DApp</h1>
+
+    <section class="clockFace">
+        <!-- (A) CURRENT TIME -->
+    <div id="ctime">
+
+    <h1 class="header">THE CURRENT TIME</h1>
+    <div class="square">
+      <div class="digits" id="chr">00</div>
+      <div class="text">HR</div>
+    </div>
+    <div class="square">
+      <div class="digits" id="cmin">00</div>
+      <div class="text">MIN</div>
+    </div>
+    <div class="square">
+      <div class="digits" id="csec">00</div>
+      <div class="text">SEC</div>
+    </div>
+  </div>
+  
+  <!-- (B) SET ALARM -->
+  <div id="tpick">
+    <h1 class="header">
+      SET ALARM
+    </h1>
+    <div class="clk_text">HR:MIM:SEC</div>
+    <div id="tpick-h"></div>
+    <div id="tpick-m"></div>
+    <div id="tpick-s"></div>
+    <div class="clk_text">Repeat the alarm everyday until:</div>
+
+    <!-- <div id="tpick-d"></div> -->
+
+    <div>
+      <input style= 
+      "width: 345px;
+      margin-right: auto;
+      margin-left: auto;
+      font-size: 20px;
+      margin-top:16px
+      " 
+      class = "date"
+      type="date" id="date">      
+    </div>
+    <div class="includingToday" style="margin-top: 8px;">
+      <p>Inluding today?</p>
+
+      <div>
+        <input type="checkbox" id="include" >
+        <label>Yes</label><br>
+      </div>
+
+      <div>
+        <input type="checkbox" id="not_include">
+        <label>No</label><br>
+      </div>
+    </div>
+
+    <div>Specifiy the amount you wish to deposit (in ether)</div>
+    <input style= 
+    "width: 345px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 20px;
+    margin-top:16px
+    " 
+    class = "deposit"
+    type="number" id="deposit">
+
+    <div>
+      <input style= "width: 100%;"  class = "set" type="button" value="Set" id="tset"/>
+      <!-- <input type="button" value="Reset" id="treset" disabled/> -->
+    </div>
+
+  </div>
+  
+  </section>
+
+    <section class="PoW">
+
+        <h1>You can re-claim
+         <!-- <u> <P class = "balanceLeft"style="display: inline;">
+            ---
+          </P>
+        </u> -->
+          you deposit
+           in 
+          <P class = "timeLeftToGo"style="display: inline;">
+            ---
+        </P></h1>
+
+        <h1>
+          Your next task is in
+          <P class = "daysLeftToGo"style="display: inline;">
+          ---
+        </P> 
+        <!-- more days to go -->
+      </h1>
+        <audio id="myAudio">
+            <source id = "audio_src" src="audios/audio_0.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <!-- <img src="images/How-Many-Triangles-Riddle.jpg" alt="triangles" width="500" 
+        style="
+        border-radius: 10px;
+        border-style: solid;
+        border-color: black;"
+        > -->
+        <div>
+            Listen carefully to
+            <button class = "audio_but" style="
+            display:inline-block;
+            background:none;
+            border:none;
+            cursor: pointer;" onclick="play_audio()">
+              🔊
+        </button>
+            
+         and transcribe the audio content in <p class="timeLeft" style="display:inline-block;">300 s</p> 
+        </div>
+        <!-- <input id="name" type="text" placeholder="Type in lower case">  -->
+        <textarea id= "answer" rows="4" cols="50" placeholder="Type the audio content in the box"></textarea>
+        <div class = "confirmation">
+            <div>
+                <button class = "confirm_but" id="submit" onclick="localVerification()">Submit my proof-of-wakeup</button>
+
+            </div>
+         
+        </div>
+
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="JS_Folder/clock.js"></script>
+
+    <script>
+        // $(".PoW").slideUp();
+
+        todayCheckbox();
+        var aud = document.getElementById("myAudio"); 
+        var timerRunning = false; 
+
+        function play_audio(){
+            if (aud.paused){
+              aud.play(); 
+            }else{
+              aud.pause();
+              aud.currentTime = 0;
+            }
+            if (timerRunning==false){
+                startTimer();
+                timerRunning= true; 
+            }
+
+        }
+        
+    </script>
+
+    <script>
+
+        var countDownTimer;
+        function startTimer(){
+           clearInterval(countDownTimer); 
+            var tltTime = 300; 
+            var i=0; 
+                countDownTimer = setInterval(() => {
+                i++; 
+                var timeLeft = tltTime-i; 
+                $(".timeLeft").text(timeLeft + ' s');
+                if (timeLeft<=0){
+                    alert("Time runs out. Submit automatically!");
+                    clearInterval(countDownTimer);
+                    timerRunning = false; 
+                    submitResults(); 
+                }
+        }, 1000);
+        }
+
+        var taskTimer;
+        function startTaskTimer(duration){
+          clearInterval(taskTimer); 
+          var i = 0;
+          taskTimer = setInterval(() => {
+                i++; 
+                var time_left = duration-i; 
+                var hrs =  parseInt(time_left/3600);
+                var mins = parseInt(time_left%3600/60);
+                var secs = time_left%3600%60;
+            
+                $(".daysLeftToGo").text(hrs + " hr(s) " + mins + " min(s) " + secs + " sec(s)");
+
+                if (time_left<=0){
+                    // alert("Time to work on the task!")
+                    clearInterval(taskTimer); 
+
+                    //request random taskID from the contract
+                    createAndRequestTaskID();
+                    //enable the submission
+                    enable_submission();
+
+                }
+        }, 1000);
+        }
+
+        // var TimeLeftTimer = setInterval(() => {
+
+        //   if (!isNaN(getFutureDateTimeInSecs())&&clockSet==true){
+        //     var time_left = getFutureDateTimeInSecs() - getCurrentDateTimeInSecs();
+        //     var hrs =  parseInt(time_left/3600);
+        //     var mins = parseInt(time_left%3600/60);
+        //     var secs = time_left%3600%60;
+            
+        //     $(".timeLeftToGo").text(hrs + " hr(s) " + mins + " min(s) " + secs + " sec(s)");
+
+        //   }
+
+        // }, 1000);
+
+        function enable_submission(){
+          $("#answer").prop("disabled",false); 
+          $(".confirm_but").prop("disabled",false)
+          $(".audio_but").prop('disabled',false);
+
+        }
+        
+
+        disable_submission();
+
+        function disable_submission(){
+          $("#answer").prop("disabled",true); 
+          $(".confirm_but").prop("disabled",true)
+          $(".audio_but").prop('disabled',true);
+
+        }
+
+        getClockTime();
+        getTaskTime();
+    </script>
+
+    <script>
+
+      function hide_clock_show_pow(){
+        $(".clockFace").slideUp();
+        $(".PoW").slideDown();
+
+        // $(".clockFace").hide();
+      }
+
+      function show_clock_hide_pow(){
+        $(".clockFace").slideDown();
+        $(".PoW").slideUp();
+      }
+
+    </script>
+
+
+</body>
+</html>

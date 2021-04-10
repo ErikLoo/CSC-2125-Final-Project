@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Time Difference Comparison</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" href="CSS_folder/clock.css">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+    <script src="JS_Folder/getRandom.js"></script>
+
+
+</head>
+<body>
+    <h1 style="text-align: center;">Get Random Number between 0 and 9</h1>
+    <P style= "text-align: center;">
+        Current random num
+    </P>
+    <div class = "currentRandomNum" style="text-align: center;">
+        xxx  
+    </div>
+
+</body>
+
+<script>
+
+var numLog = []
+
+  var timePassed = 0
+  function startRequestingRandomNum(){
+      //send a time request to smart contract every xxx minutes
+    //   var probeTimer = setInterval(() => {
+    //     var c_time= getCurrentDateTime();
+    //     //probing will cost transcation fee
+    //     probeContract();
+    //     // updateTime();
+    // }, 1000);
+   var stopAfter = 3600;
+   var getTimer = setInterval(() => {
+        timePassed+=1;
+
+        getRandomNum();
+
+        //autodownload the file for every 10 entries
+        if(numLog.length>=100){
+            download_file();
+            //reset the time log
+            numLog = [];
+        }
+
+        if (timePassed>=stopAfter){
+            clear(getTimer);
+        }
+
+  }, 5*1000);
+  }
+
+</script>
+<script>
+
+
+function download_file() {
+  //user input txt field will be logged automatically
+  // stringify JSON Object
+  var jsonContent = JSON.stringify(numLog);
+  console.log(jsonContent);
+
+  saveText( jsonContent, "numLog.json");
+
+}
+
+function saveText(text, filename){
+  var a = document.createElement('a');
+  a.setAttribute('href', 'data:text/plain;charset=utf-8,'+encodeURIComponent(text));
+  a.setAttribute('download', filename);
+  a.click()
+}
+</script>
+
+</html>

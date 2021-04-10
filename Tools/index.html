@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>Coursetro Instructor</h1>
+
+        <h2 id="instructor"></h2>
+
+        <label for="name" class="col-lg-2 control-label">Instructor Name</label>
+        <input id="name" type="text">
+
+        <label for="name" class="col-lg-2 control-label">Instructor Age</label>
+        <input id="age" type="text">
+
+        <button id="button">Update Instructor</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+		//the default current provider is metamask for some reason
+        //   if (typeof web3 !== 'undefined') {
+        //     web3 = new Web3(web3.currentProvider);
+        // } else {
+        //     // set the provider you want from Web3.providers
+		// 	// obtain this parameter from 
+        //     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        // }
+
+		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
+        // use the first accounts of the testrpc
+        // web3.eth.defaultAccount = web3.eth.accounts[0];
+		
+		// web3.eth.getAccounts().then(e => { web3.eth.defaultAccount = e[0];console.log("A: " + web3.eth.defaultAccount);}) 	
+		// 		// intantiate a new contract object
+		
+		// console.log(web3.eth.defaultAccount);
+
+	  var userAccount; 
+	  var accountTimer = setInterval(() => {
+		web3.eth.getAccounts().then(e => {userAccount = e[0];console.log("getting user account");}) 	
+		if (userAccount!=null){
+			clearInterval(accountTimer); 
+			console.log(userAccount)
+		}
+	  }, 1000);
+		var userAccount;
+
+        var testContract = new web3.eth.Contract(
+		[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fName",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_age",
+				"type": "uint256"
+			}
+		],
+		"name": "setInstructor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getInstructor",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+],'0x18f5625bCD7e2FDE57FC69B8C98d7e93738A57A8'
+
+		)
+
+		// find contract address from Remix ide
+    // var test = testContract.at('0x18f5625bCD7e2FDE57FC69B8C98d7e93738A57A8');
+	// console.log(testContract); 
+	
+	testContract.methods.getInstructor().call(function(error, result){
+            if(!error)
+                {
+                    $("#instructor").html(result[0]+' ('+result[1]+' years old)');
+                    console.log(result);
+                }
+            else
+                console.error(error);
+        });
+
+    $("#button").click(function() {
+			//change this account to metamask account after online deployment
+			// userAccount = '0xC053260C5243465cB120A040Cf161d45D4fb957c';
+            testContract.methods.setInstructor($("#name").val(), $("#age").val()).send({from: userAccount});
+    });
+
+
+    </script>
+
+</body>
+</html>
